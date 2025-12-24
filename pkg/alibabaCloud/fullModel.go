@@ -59,7 +59,7 @@ type ImageModelMessageContent struct {
 }
 
 type ImageModelMessageContentImageUrl struct {
-	Url string `json:"url,omitempty"`
+	Url string `json:"url,omitempty"` // 使用本地文件是可以使用base64内容 "image_url": {"url": f"data:image/png;base64,{base64_image}"},
 }
 
 type StreamResponse struct {
@@ -101,7 +101,7 @@ type StreamResponseUsagePromptTokensDetails struct {
 }
 
 const (
-	lotteryTicketSystem = `
+	LotteryTicketSystem = `
 你需要提取出彩票类型名字(name,为string类型)、期号(issue,为string类型)、期号数字(issueNumber,为int类型)、开奖日期(drawDate,为string类型)、单式票(tickets,为array string类型)、金额(amount,为string类型)、金额值(amountNumber,为int类型)
 示例：
 Q:图片为大乐透彩票
@@ -119,7 +119,7 @@ type LotteryTicket struct {
 	AmountNumber int      `json:"amountNumber"`
 }
 
-func (client *Client) ImageCompletions(imageUrl string, userTextContent string) {
+func (client *Client) ImageCompletions(imageUrl string, systemTextContent, userTextContent string) {
 	imageModelReq := ImageModelReq{
 		Model: defaultModel,
 		Messages: []ImageModelMessage{
@@ -128,7 +128,7 @@ func (client *Client) ImageCompletions(imageUrl string, userTextContent string) 
 				Content: []ImageModelMessageContent{
 					{
 						Type: "text",
-						Text: lotteryTicketSystem,
+						Text: systemTextContent,
 					},
 				},
 			},
